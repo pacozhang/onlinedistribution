@@ -97,7 +97,7 @@ public class SendCouponsvr extends SvrProcess {
 					List ins = interfacesets.get(ad_client_id);
 					ticketno = "";
 
-					if (usertype == 3) {
+					if (usertype == 2||usertype == 3) {
 						if (ins == null) {
 							log.debug("not find WX_INTERFACESET :ad_client_id-->" + ad_client_id);
 							continue;
