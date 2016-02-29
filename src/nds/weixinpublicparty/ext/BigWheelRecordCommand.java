@@ -189,7 +189,7 @@ public class BigWheelRecordCommand extends Command {
 					String couponvalue = String.valueOf(((List)cinfo.get(0)).get(2));
 					String starttime = String.valueOf(((List)cinfo.get(0)).get(3));
 					String endtime = String.valueOf(((List)cinfo.get(0)).get(4));
-				if(usertype==3)
+				if(usertype == 2||usertype == 3)
 				{
 					HashMap<String, String> params =new HashMap<String, String>();
 					ts=String.valueOf(System.currentTimeMillis());
