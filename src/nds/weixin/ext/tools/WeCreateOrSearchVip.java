@@ -36,6 +36,7 @@ public class WeCreateOrSearchVip {
 		StringBuffer address=new StringBuffer();
 		String openid=jo.optString("FromUserName");
 		logger.debug("params is:"+jo.toString());
+		logger.debug("event:"+event);
 		Connection con=null;
 		
 		List vipinfo=null;
