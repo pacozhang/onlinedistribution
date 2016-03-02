@@ -52,7 +52,8 @@ public class VerifyVipIngegralCommand extends Command{
 			vh.put("message","会员数据异常请重试");
 			return vh;
 		}
-		int integral=jo.optInt("integral");
+		
+		
 		
 		
 		//查询接口相关信息 url,skey
@@ -91,7 +92,18 @@ public class VerifyVipIngegralCommand extends Command{
 			params.put("args[cardid]",careid);
 			
 			params.put("args[vipno]",vipno);
-			params.put("args[integral]",String.valueOf(integral));
+			
+			String integral=jo.optString("integral");
+			if(nds.util.Validator.isNotNull(integral)){
+				params.put("args[integral]",integral);
+			}
+			
+			
+			String ticketno = jo.optString("ticketno");
+
+			if(nds.util.Validator.isNotNull(ticketno)){
+				params.put("args[ticketno]",ticketno);
+			}
 			
 			params.put("format","JSON");
 			params.put("client","");
@@ -117,7 +129,7 @@ public class VerifyVipIngegralCommand extends Command{
 				logger.debug("verifyintegral offline error->"+e.getLocalizedMessage());
 				e.printStackTrace();
 				vh.put("code","-1");
-				vh.put("message","ERP验证积分异常，请重试");
+				vh.put("message","ERP验证积分或优惠券异常，请重试");
 				return vh;
 			}
 			vh.put("code", rjo.optInt("errCode"));
