@@ -150,7 +150,7 @@ public class UseConponOrIntExcCommand extends Command{
 		params.put("ver","1.0");
 		params.put("sig",Sign);
 		params.put("ts",ts);
-		params.put("method","onlineUseConponOrIntExc");
+		params.put("method","onlineUseCouOrIntExc");
 		
 		ValueHolder vhr=null;
 		try{
