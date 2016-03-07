@@ -95,7 +95,7 @@ public class BigWheelRecordCommand extends Command {
 				params.put("args[cardid]",ad_client_id);
 				params.put("args[cardno]",vipcardno);
 				params.put("args[docno]",ts);
-				params.put("args[description]","刮刮乐奖品送积分");
+				params.put("args[description]","大转盘奖品送积分");
 				params.put("args[integral]",String.valueOf(integral));				
 				params.put("format","JSON");
 				
@@ -142,7 +142,7 @@ public class BigWheelRecordCommand extends Command {
 				   try {
 					consumejo.put("vipid", wx_vip_id);
 					consumejo.put("getCredits", integral);
-					consumejo.put("description", "刮刮乐奖品送积分");
+					consumejo.put("description", "大转盘奖品送积分");
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
