@@ -17,7 +17,7 @@ public class LocationDispose implements IMessageDispose{
 	public void dispose(HttpServletRequest request,HttpServletResponse response, WxPublicControl wpc,JSONObject jo) {
 		try{
 			PrintWriter pw=response.getWriter();
-			pw.print("s");
+			pw.print("");
 			pw.flush();
 			pw.close();
 		}catch(Exception e){
