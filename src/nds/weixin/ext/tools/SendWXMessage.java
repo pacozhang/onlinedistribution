@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import nds.log.Logger;
 import nds.log.LoggerManager;
+import nds.publicweixin.ext.tools.ChangeCNChar;
 import nds.weixin.ext.WePublicparty;
 import nds.weixin.ext.WePublicpartyManger;
 import nds.weixin.ext.dispose.TextDispose;
@@ -43,6 +44,7 @@ public class SendWXMessage {
 			}
 			return;
 		}
+		message=ChangeCNChar.change(message);
 		logger.debug("result->"+message);
 		try {
 			WXBizMsgCrypt pc = new WXBizMsgCrypt(wpp.getToken(), wpp.getNewencodingaeskey(), wpp.getAppid());
