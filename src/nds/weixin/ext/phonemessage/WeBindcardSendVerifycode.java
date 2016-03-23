@@ -50,27 +50,46 @@ public class WeBindcardSendVerifycode implements ISendSMSMessage{
 		//生成随机数字字符串
 		verifycode=RandomStringUtils.randomNumeric(6);
 		
-		/*
-		int getNum;
-		String dn=null;
-		Random rd = new Random();
-		do {
-			getNum = Math.abs(rd.nextInt())%10 + 48;//产生数字0-9的随机数
-			//getNum = Math.abs(rd.nextInt())%26 + 97;//产生字母a-z的随机数
-			char num1 = (char)getNum;
-			dn= Character.toString(num1);
-			verifycode += dn;
-		} while (verifycode.length()<6);
-		*/
-		
 		
 		try {
 			logger.debug("bindcard send verifycode->"+verifycode);
+			jo.put("verifycode", verifycode);
 			jo.put("content", "您正在进行会员绑卡操作,验证码:"+verifycode+"，请务将验证码泄漏!");
 		} catch (Exception e) {
 			
 		}
 		logger.debug("bindcard sendphone info->"+jo.toString());
+		
+		holder=WeSendSMS.sendsms(jo);
+		if(holder==null||!holder.get("code").equals("0")) {
+	    	logger.debug("bind card send phone message error->result is null or error");
+	    	holder.put("code", "-1");
+	    	holder.put("message", "绑卡发验证码失败！");
+	    	return holder;
+	    }
+		
+		//修改会员表中的验证码字段
+	    try {
+	    	JSONObject verifycodeinfo=new JSONObject();
+	    	verifycodeinfo.put("vipid", jo.optInt("vipid"));
+	    	verifycodeinfo.put("phone", jo.optString("phone"));
+	    	verifycodeinfo.put("verifycode",jo.optString("verifycode"));
+	    	verifycodeinfo.put("verifymessage", jo.optString("content"));
+	    	ArrayList params=new ArrayList();
+	    	params.add(verifycodeinfo.toString());
+	    	ArrayList returns=new ArrayList();
+	    	returns.add(java.sql.Clob.class);
+	    	
+	    	QueryEngine.getInstance().executeFunction("wx_vip_disposeverifycode", params, returns);
+	    }catch(Exception e) {
+	    	logger.debug("send phone message update vip("+jo.optInt("vipid")+") error->"+e.getLocalizedMessage());
+	    	e.printStackTrace();
+	    	holder.put("code", "-1");
+	    	holder.put("message", "验证码发送失败！");
+	    	return holder;
+	    }
+		
+		/*
 	    WeSendPhoneMessage wspm=new WeSendPhoneMessage();
 	    holder=wspm.sendPhoneMessage(jo);
 	    if(holder==null) {
@@ -114,6 +133,7 @@ public class WeBindcardSendVerifycode implements ISendSMSMessage{
 	    	holder.put("message", "绑卡发验证码失败！");
 	    	return holder;
 	    }
+	    */
 		return holder;
 	}
 	

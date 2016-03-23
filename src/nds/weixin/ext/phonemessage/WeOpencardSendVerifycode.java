@@ -60,11 +60,43 @@ public class WeOpencardSendVerifycode implements ISendSMSMessage{
 		
 		try {
 			logger.debug("opencard send verifycode is->"+verifycode);
+			jo.put("verifycode", verifycode);
 			jo.put("content", "您正在进行会员开卡操作,验证码:"+verifycode+"，请务将验证码泄漏!");
 		} catch (Exception e) {
 			
 		}
 		logger.debug("opencard sendphone info->"+jo.toString());
+		
+		holder=WeSendSMS.sendsms(jo);
+		if(holder==null||!holder.get("code").equals("0")) {
+	    	logger.debug("bind card send phone message error->result is null or error");
+	    	holder.put("code", "-1");
+	    	holder.put("message", "绑卡发验证码失败！");
+	    	return holder;
+	    }
+		
+		//修改会员表中的验证码字段
+	    try {
+	    	JSONObject verifycodeinfo=new JSONObject();
+	    	verifycodeinfo.put("vipid", jo.optInt("vipid"));
+	    	verifycodeinfo.put("phone", jo.optString("phone"));
+	    	verifycodeinfo.put("verifycode",jo.optString("verifycode"));
+	    	verifycodeinfo.put("verifymessage", jo.optString("content"));
+	    	ArrayList params=new ArrayList();
+	    	params.add(verifycodeinfo.toString());
+	    	ArrayList returns=new ArrayList();
+	    	returns.add(java.sql.Clob.class);
+	    	
+	    	QueryEngine.getInstance().executeFunction("wx_vip_disposeverifycode", params, returns);
+	    }catch(Exception e) {
+	    	logger.debug("send phone message update vip("+jo.optInt("vipid")+") error->"+e.getLocalizedMessage());
+	    	e.printStackTrace();
+	    	holder.put("code", "-1");
+	    	holder.put("message", "验证码发送失败！");
+	    	return holder;
+	    }
+		
+		/*
 	    WeSendPhoneMessage wspm=new WeSendPhoneMessage();
 	    holder=wspm.sendPhoneMessage(jo);
 	    if(holder==null) {
@@ -89,26 +121,9 @@ public class WeOpencardSendVerifycode implements ISendSMSMessage{
 	    	holder.put("message", "开卡发验证码失败！");
 	    	return holder;
 	    }
+	    */
 	    
-	    //修改会员表中的验证码字段
-	    try {
-	    	JSONObject verifycodeinfo=new JSONObject();
-	    	verifycodeinfo.put("vipid", vipid);
-	    	verifycodeinfo.put("phone", jo.optString("phone"));
-	    	verifycodeinfo.put("verifycode",verifycode);
-	    	verifycodeinfo.put("verifymessage", "您正在进行会员开卡操作,验证码:"+verifycode+"，请务将验证码泄漏!");
-	    	ArrayList params=new ArrayList();
-	    	params.add(verifycodeinfo.toString());
-	    	ArrayList returns=new ArrayList();
-	    	returns.add(java.sql.Clob.class);
-	    	
-	    	QueryEngine.getInstance().executeFunction("wx_vip_disposeverifycode", params, returns);
-	    }catch(Exception e) {
-	    	logger.debug("open card send phone message update vip("+vipid+") error->"+e.getLocalizedMessage());
-	    	holder.put("code", "-1");
-	    	holder.put("message", "开卡发验证码失败！");
-	    	return holder;
-	    }
+	    
 		return holder;
 	}
 
