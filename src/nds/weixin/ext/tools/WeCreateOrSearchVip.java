@@ -71,7 +71,7 @@ public class WeCreateOrSearchVip {
 							address.append(userjo.optString("city"));
 						
 							try {
-								QueryEngine.getInstance().executeUpdate(updatetvip, new Object[] {userjo.optString("headimgurl",""),userjo.optString("nickname",""),userjo.optString("unionid",""),userjo.optString("country",""),userjo.optString("province",""),userjo.optString("city",""),userjo.optString("sex"),(address.length()<=0?"":address.toString()),(0==userjo.optInt("subscribe",0)?"N":"Y"),viptempid,con});
+								QueryEngine.getInstance().executeUpdate(updatetvip, new Object[] {userjo.optString("headimgurl",""),userjo.optString("nickname",""),userjo.optString("unionid",""),userjo.optString("country",""),userjo.optString("province",""),userjo.optString("city",""),userjo.optString("sex"),(address.length()<=0?"":address.toString()),(0==userjo.optInt("subscribe",0)?"N":"Y"),viptempid},con);
 								QueryEngine.getInstance().executeUpdate("update wx_vip v set v.photo=?,v.name=?,v.ifcancleattention='Y' where v.id=?",new Object[] {userjo.optString("headimgurl",""),userjo.optString("nickname",""),vipid},con);
 							}catch(Exception e) {
 								logger.debug("update tempvip error->"+e.getLocalizedMessage());
@@ -90,6 +90,8 @@ public class WeCreateOrSearchVip {
 						}
 					}
 				}
+				
+				con.commit();
 				returnjo.put("code", 0);
 				returnjo.put("vipid", vipid);
 				returnjo.put("type", "search");
@@ -126,6 +128,7 @@ public class WeCreateOrSearchVip {
 					vipid=QueryEngine.getInstance().doQueryInt(searchVipid, new Object[] {openid,wu.getAd_client_id()}, con);
 					logger.debug("execute create vip=>");
 					
+					con.commit();
 					returnjo.put("code", 0);
 					returnjo.put("vipid", vipid);
 					returnjo.put("type", "create");
@@ -145,6 +148,7 @@ public class WeCreateOrSearchVip {
 				returnjo.put("vipid", vipid);
 				returnjo.put("type", "create");
 				
+				con.commit();
 				return returnjo;
 				
 				/*

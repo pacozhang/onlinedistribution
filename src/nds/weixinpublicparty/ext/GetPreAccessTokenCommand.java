@@ -20,7 +20,9 @@ public class GetPreAccessTokenCommand  extends Command{
 			RemoteException {
 		ValueHolder vh=new ValueHolder();
 		
-		String wxappid=WebUtils.getProperty("currentpublicparty","wx73b758959e1ef0f2");
+		//String wxappid=WebUtils.getProperty("currentpublicparty","wx73b758959e1ef0f2");
+		WePublicparty wpp=WePublicpartyManger.getInstance().getWpc();
+		String wxappid=wpp.getAppid();
 		
 		
 		WxPublicpartyControl wppc=WxPublicpartyControl.getInstance(wxappid);

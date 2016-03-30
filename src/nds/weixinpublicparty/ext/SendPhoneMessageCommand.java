@@ -32,6 +32,8 @@ public class SendPhoneMessageCommand extends Command{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		/*
 		//判断客户金额是否足够
 		int canusesms=0;
 		canusesms=QueryEngine.getInstance().doQueryInt("select sms.canusenumber-GETSENDSMSCOUNT(sms.ad_client_id) from wx_smsinfo sms where sms.ad_client_id=?", new Object[] {jo.optString("companyid")});
@@ -43,9 +45,11 @@ public class SendPhoneMessageCommand extends Command{
 			vh.put("message","公司短信功能异常，请联系商家。");
 			return vh;
 		}
+		*/
 		
 		//获取发送短信对象
 		String method=jo.optString("method");
+		logger.debug("send message method:"+method);
 		ESendPhoneType sendtype=ESendPhoneType.getEventType(method);
 		if(sendtype==null) {
 			logger.debug("send phone message error->send method is not find");

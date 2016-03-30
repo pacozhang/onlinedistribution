@@ -27,7 +27,7 @@ public enum ESmsPlatform {
         if(smsTypes == null) {
         	smsTypes = new HashMap<String,ESmsPlatform>();
         	smsTypes.put("ssdj", smsdj);
-        	smsTypes.put("bindcard", zhutong);
+        	smsTypes.put("zhutong", zhutong);
         }
         
         return smsTypes.get(eKey);

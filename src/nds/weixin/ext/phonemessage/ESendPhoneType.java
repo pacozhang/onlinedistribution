@@ -5,7 +5,8 @@ import java.util.Map;
 
 public enum ESendPhoneType {
 	opencard("opencard","nds.weixin.ext.phonemessage.WeOpencardSendVerifycode"),
-	bindcard("bindcard","nds.weixin.ext.phonemessage.WeBindcardSendVerifycode");
+	bindcard("bindcard","nds.weixin.ext.phonemessage.WeBindcardSendVerifycode"),
+	updatecard("updatecard","nds.weixin.ext.phonemessage.WeUpdatecardSendVerifycode");
 	
 	private String eKey;
 	private String eValue;
@@ -29,6 +30,7 @@ public enum ESendPhoneType {
         	eSendType = new HashMap<String,ESendPhoneType>();
         	eSendType.put("opencard", opencard);
         	eSendType.put("bindcard", bindcard);
+        	eSendType.put("updatecard", updatecard);
         }
         
         return eSendType.get(eKey);
