@@ -18,7 +18,7 @@ public class UnSubscribeDispose implements IMessageDispose {
 	@Override
 	public void dispose(HttpServletRequest request,HttpServletResponse response, WxPublicControl wpc, JSONObject jo) {
 		String sql="update wx_vip_inqury vi set vi.dateout=sysdate,vi.issubscribe='N' where vi.wechatno=? and vi.ad_client_id=?";
-		String sqlo="update wx_vip v set v.IFCANCLEATTENTION='N',v.modifieddate=sysdate where v.wechatno=? and v.ad_client_id=?";
+		String sqlo="update wx_vip v set v.IFCANCLEATTENTION='Y',v.modifieddate=sysdate where v.wechatno=? and v.ad_client_id=?";
 		WeUtils wu=wpc.getWxPublic();
 		if(wu==null) {return;}
 		
