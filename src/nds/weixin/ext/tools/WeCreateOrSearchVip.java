@@ -72,14 +72,14 @@ public class WeCreateOrSearchVip {
 						
 							try {
 								QueryEngine.getInstance().executeUpdate(updatetvip, new Object[] {userjo.optString("headimgurl",""),userjo.optString("nickname",""),userjo.optString("unionid",""),userjo.optString("country",""),userjo.optString("province",""),userjo.optString("city",""),userjo.optString("sex"),(address.length()<=0?"":address.toString()),(0==userjo.optInt("subscribe",0)?"N":"Y"),viptempid},con);
-								QueryEngine.getInstance().executeUpdate("update wx_vip v set v.photo=?,v.name=?,v.ifcancleattention='Y' where v.id=?",new Object[] {userjo.optString("headimgurl",""),userjo.optString("nickname",""),vipid},con);
+								QueryEngine.getInstance().executeUpdate("update wx_vip v set v.photo=?,v.name=?,v.ifcancleattention='N' where v.id=?",new Object[] {userjo.optString("headimgurl",""),userjo.optString("nickname",""),vipid},con);
 							}catch(Exception e) {
 								logger.debug("update tempvip error->"+e.getLocalizedMessage());
 							}
 						}
 					}else {
 						String sql="update wx_vip_inqury vi set vi.dateout=sysdate,vi.issubscribe='Y' where vi.wechatno=? and vi.ad_client_id=?";
-						String sqlo="update wx_vip v set v.IFCANCLEATTENTION='Y',v.modifieddate=sysdate where v.wechatno=? and v.ad_client_id=?";
+						String sqlo="update wx_vip v set v.IFCANCLEATTENTION='N',v.modifieddate=sysdate where v.wechatno=? and v.ad_client_id=?";
 						
 						try {
 							QueryEngine.getInstance().executeUpdate(sql, new Object[] {openid,wu.getAd_client_id()},con);
