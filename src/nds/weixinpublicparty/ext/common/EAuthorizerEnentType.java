@@ -5,6 +5,7 @@ import java.util.Hashtable;
 
 public enum EAuthorizerEnentType {
 	unauthorized("unauthorized","nds.weixinpublicparty.ext.common.UnAuthorizedDispose"),
+	authorized("authorized","nds.weixinpublicparty.ext.common.AuthorzerDispose"),
 	componentverifyticket("component_verify_ticket","nds.weixinpublicparty.ext.common.ComponentVerifyTicketDispose");
 	
 	
@@ -31,6 +32,7 @@ public enum EAuthorizerEnentType {
 			eAets=new Hashtable<String,EAuthorizerEnentType>();
 			eAets.put("unauthorized", unauthorized);
 			eAets.put("component_verify_ticket", componentverifyticket);
+			eAets.put("authorized", authorized);
 		}
 		
 		eaet=eAets.get(ekey);
