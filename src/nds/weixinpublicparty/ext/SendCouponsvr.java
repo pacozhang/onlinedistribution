@@ -56,6 +56,7 @@ public class SendCouponsvr extends SvrProcess {
 
 			String ts;
 			String couponvalue;
+			String minimumcharge;
 			String starttime;
 			String endtime;
 			int usertype;
@@ -70,7 +71,7 @@ public class SendCouponsvr extends SvrProcess {
 
 			String selectsendsql = "select wsc.id,nvl(cp.value,'0'),to_char(decode(nvl(cp.validay,0),0,nvl(cp.starttime,sysdate), sysdate), 'YYYYMMDD'),"
 					+ "to_char(decode(nvl(cp.validay,0),0, nvl(cp.endtime, add_months(cp.starttime, 1)),sysdate+cp.validay), 'YYYYMMDD'),"
-					+ "cp.USETYPE1,cp.NUM,wsc.ad_client_id,vp.wechatno,vp.vipcardno,vp.id,nvl(wsc.sync_count, 0)"
+					+ "cp.USETYPE1,cp.NUM,wsc.ad_client_id,vp.wechatno,vp.vipcardno,vp.id,cp.minimumcharge"
 					+ " from wx_sendcoupondetail wsc,wx_coupon cp,wx_vip vp where wsc.wx_coupon_id=cp.id and wsc.wx_vip_id=vp.id and nvl(wsc.sync_count,0)<=5 and nvl(wsc.sync_state,1)=1 "
 					+ "and exists(select 1 from wx_sendcoupon sc where sc.id=wsc.wx_sendcoupon_id and sc.status=2) and rownum<=500 order  by wsc.wx_sendcoupon_id desc,wsc.creationdate desc, wsc.modifieddate asc";
 
@@ -87,11 +88,11 @@ public class SendCouponsvr extends SvrProcess {
 					usertype = Integer.parseInt(String.valueOf(sendcouponinfo.get(i).get(4)));
 					wx_cp_num = String.valueOf(sendcouponinfo.get(i).get(5));
 					ad_client_id = String.valueOf(sendcouponinfo.get(i).get(6));
-
+					
 					openid = String.valueOf(sendcouponinfo.get(i).get(7));
 					vipcardno = String.valueOf(sendcouponinfo.get(i).get(8));
 					wvipid = Integer.parseInt(String.valueOf(sendcouponinfo.get(i).get(9)));
-
+					minimumcharge = String.valueOf(sendcouponinfo.get(i).get(10));
 					params = new HashMap<String, String>();
 					ts = String.valueOf(System.currentTimeMillis());
 					List ins = interfacesets.get(ad_client_id);
@@ -116,6 +117,7 @@ public class SendCouponsvr extends SvrProcess {
 						params.put("args[vipno]", vipcardno);
 						params.put("args[couponno]", wx_cp_num);
 						params.put("args[couponvalue]", couponvalue);
+						params.put("args[minimumcharge]", minimumcharge);
 						params.put("args[begintime]", starttime);
 						params.put("args[endtime]", endtime);
 
