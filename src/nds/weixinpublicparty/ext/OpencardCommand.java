@@ -20,6 +20,7 @@ import nds.rest.RestUtils;
 import nds.util.NDSException;
 import nds.util.Tools;
 import nds.weixin.ext.SipStatus;
+import nds.weixin.ext.tools.StringUtils;
 import nds.weixin.ext.tools.VipPhoneVerifyCode;
 
 public class OpencardCommand extends Command{
@@ -78,9 +79,9 @@ public class OpencardCommand extends Command{
 		}
 		all=(List)all.get(0);
 		
-		String serverUrl=String.valueOf(all.get(0));
-		boolean isErp="Y".equalsIgnoreCase(String.valueOf(all.get(2)));
-		String SKEY=(String)((List)all.get(0)).get(3);
+		String serverUrl=StringUtils.valueOf(all.get(0));
+		boolean isErp="Y".equalsIgnoreCase(StringUtils.valueOf(all.get(2)));
+		String SKEY=StringUtils.valueOf(all.get(3));
 		boolean isVerifyCode="Y".equalsIgnoreCase(String.valueOf(all.get(4)));
 		if(isErp&&(nds.util.Validator.isNull(serverUrl)||nds.util.Validator.isNull(SKEY))) {
 			logger.error("SERVERuRL OR SKEY IS NULL");

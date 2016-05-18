@@ -13,6 +13,7 @@ import nds.control.util.ValueHolder;
 import nds.query.QueryEngine;
 import nds.rest.RestUtils;
 import nds.util.NDSException;
+import nds.weixin.ext.tools.StringUtils;
 
 public class VipLoginCommand extends Command{
 
@@ -45,7 +46,7 @@ public class VipLoginCommand extends Command{
 		int vipid=jo.optInt("vipid",-1);
 		int companyid=jo.optInt("companyid",-1);
 		
-		if (companyid<=0 || vipid<=0) {
+		if (companyid<=0 || vipid<=0 ) {
 			logger.error("params error:companyid:"+companyid+",vipid:"+vipid);
 			vh.put("code", "-1");
 			vh.put("message", "登陆异常请重试");
@@ -71,10 +72,10 @@ public class VipLoginCommand extends Command{
 		}
 		all=(List)all.get(0);
 		
-		String serverUrl=String.valueOf(all.get(0));
-		boolean isErp="Y".equalsIgnoreCase(String.valueOf(all.get(2)));
-		String SKEY=(String)((List)all.get(0)).get(3);
-		boolean isVerifyCode="Y".equalsIgnoreCase(String.valueOf(all.get(4)));
+		String serverUrl=StringUtils.valueOf(all.get(0));
+		boolean isErp="Y".equalsIgnoreCase(StringUtils.valueOf(all.get(2)));
+		String SKEY=StringUtils.valueOf(all.get(3));
+		boolean isVerifyCode="Y".equalsIgnoreCase(StringUtils.valueOf(all.get(4)));
 		if(isErp&&(nds.util.Validator.isNull(serverUrl)||nds.util.Validator.isNull(SKEY))) {
 			logger.error("SERVERuRL OR SKEY IS NULL");
 			vh.put("code", "-1");
@@ -84,10 +85,9 @@ public class VipLoginCommand extends Command{
 		
 		//判断会员是否已注册或已领卡
 		String ops=null;
-		Object objops=null;
+		List vip=null;
 		try {
-			objops=QueryEngine.getInstance().doQueryOne("select v.opencard_status from wx_vip v where v.id=?",new Object[]{vipid});
-			ops=String.valueOf(objops);
+			vip=QueryEngine.getInstance().doQueryList("select v.opencard_status,v.wechatno,v.vipcardno,vbs.code,s.code,g.code,v.integral,v.lastamt,v.name,v.gender,v.birthday,v.docno from wx_vip v join wx_vipbaseset vbs on v.viptype=vbs.id left join wx_store s on v.store_id=s.id left join wx_guide g on v.guide=g.id where v.id=?",new Object[]{vipid});
 		} catch (Exception e) {
 			logger.error("select vipinfo error:"+e.getLocalizedMessage());
 			e.printStackTrace();
@@ -95,12 +95,26 @@ public class VipLoginCommand extends Command{
 			vh.put("messae", "登陆异常请重试");
 			return vh ;
 		}
-		if (nds.util.Validator.isNull(ops)) {
+		if (vip==null||vip.size()<=0) {
 			logger.error("select set offline params error:not find data");
 			vh.put("code", "-1");
 			vh.put("messae", "登陆异常请重试");
 			return vh ;
 		}
+		vip=(List)vip.get(0);
+		ops=String.valueOf(vip.get(0));
+		String openid=StringUtils.valueOf(vip.get(1));
+		String vipno=StringUtils.valueOf(vip.get(2));
+		String viptypecode=StringUtils.valueOf(vip.get(3));
+		String storecode=StringUtils.valueOf(vip.get(4));
+		String guidecode=StringUtils.valueOf(vip.get(5));
+		String integral=StringUtils.valueOf(vip.get(6));
+		String amount=StringUtils.valueOf(vip.get(7));
+		String vipname=StringUtils.valueOf(vip.get(8));
+		String sex=StringUtils.valueOf(vip.get(9));
+		String birthday=StringUtils.valueOf(vip.get(10));
+		String docno=StringUtils.valueOf(vip.get(11));
+		
 		if("2".equals(ops)) {
 			vh.put("code", "0");
 			vh.put("messae", "会员已领卡。");
@@ -123,7 +137,7 @@ public class VipLoginCommand extends Command{
 		}
 		
 		if(!isErp) {
-			vh.put("code", "-1");
+			vh.put("code", "-2");
 			vh.put("messae", "客户未接通线下，请走领卡流程。");
 			return vh ;
 		}
@@ -147,6 +161,18 @@ public class VipLoginCommand extends Command{
 		try {
 			offparam.put("brandcode", brandcode);
 			offparam.put("mobile", mobile);
+			offparam.put("openid", openid);
+			offparam.put("vipno", vipno);
+			offparam.put("typecode", viptypecode);
+			offparam.put("storecode", storecode);
+			offparam.put("guidecode", guidecode);
+			offparam.put("integral", integral);
+			offparam.put("amount", amount);
+			offparam.put("name", vipname);
+			offparam.put("sex", sex);
+			offparam.put("birthday", birthday);
+			offparam.put("docno", docno);
+			offparam.put("cardid", String.valueOf(companyid));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -197,7 +223,7 @@ public class VipLoginCommand extends Command{
 			return vh;
 		}
 		if(offjo.optInt("errCode",-1)!=0) {
-			vh.put("code", "-1");
+			vh.put("code", offjo.optString("errCode","-1"));
 			vh.put("message", offjo.optString("errMessage"));
 			return vh;
 		}
@@ -208,10 +234,11 @@ public class VipLoginCommand extends Command{
 		}
 		offjo=offjo.optJSONObject("result");
 		
-		String sql="update wx_vip v set v.viptype,v.vippassword,v.store_id,v.opendate,v.integral,v.lastamt,v.opencard_status,v.phonenum,v.idcard,v.gender,v.birthday,v.contactaddress,v.email,v.docno,v.relname,v.province,v.city,v.area)"
-				   +"select nvl(vbs.id,v.viptype),?,nvl(s.id,v.store_id),to_number(to_char(sysdate,'yyyyMMdd')),?,?,2,?,?,?,?,?,?,?,?,?,?,? from wx_vipbaseset vbs left join wx_store s on s.code=? and s.ad_client_id=? where vbs.code=? and vbs.ad_client_id=?";
+		String sql="update wx_vip v set (v.viptype,v.vippassword,v.store_id,v.opendate,v.integral,v.lastamt,v.opencard_status,v.phonenum,v.idcard,v.gender,v.birthday,v.contactaddress,v.email,v.docno,v.relname,v.province,v.city,v.area)="
+				   +"(select nvl(vbs.id,v.viptype),?,nvl(s.id,v.store_id),to_number(to_char(sysdate,'yyyyMMdd')),?,?,2,?,?,?,?,?,?,?,?,?,?,? from web_client c left join wx_vipbaseset vbs on c.ad_client_id=? and vbs.ad_client_id = c.ad_client_id and vbs.code=? left join wx_store s on s.code=? and s.ad_client_id=? where c.ad_client_id=?)"
+				   +"where v.id=?";
 		try {
-			QueryEngine.getInstance().executeUpdate(sql, new Object[] {offjo.optString("psd"),offjo.optDouble("integral", 0),offjo.optDouble("amt", 0),offjo.optString("mobile"),offjo.optString("idcard"),offjo.optString("gender"),offjo.optString("birthday"),offjo.optString("address"),offjo.optString("email"),offjo.optString("docno"),offjo.optString("name"),offjo.optString("province"),offjo.optString("city"),offjo.optString("area")});
+			QueryEngine.getInstance().executeUpdate(sql, new Object[] {offjo.optString("psd"),offjo.optDouble("integral", 0),offjo.optDouble("amt", 0),offjo.optString("mobile"),offjo.optString("idcard"),offjo.optString("gender"),offjo.optString("birthday"),offjo.optString("address"),offjo.optString("email"),offjo.optString("docno"),offjo.optString("name"),offjo.optString("province"),offjo.optString("city"),offjo.optString("area"),companyid,offjo.optString("typecode"),offjo.optString("storecode"),companyid,companyid,vipid});
 		} catch (Exception e) {
 			logger.error("login update vip error:"+e.getLocalizedMessage());
 			e.printStackTrace();
