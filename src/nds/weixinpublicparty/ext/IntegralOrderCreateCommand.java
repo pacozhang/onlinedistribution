@@ -231,6 +231,9 @@ public class IntegralOrderCreateCommand extends Command{
 			tx.printStackTrace();
 			vh.put("code","-1");
 			vh.put("message","数据维护异常，请联系商家");
+			
+			QueryEngine.getInstance().executeUpdate("update wx_order t set t.isactive='N',t.ordermessage=? where t.id=? and t.ad_client_id=?", new Object[] {"请求线下异常",orderid,ad_client_id});
+			
 			return vh;
 			//return;
 		}
@@ -242,6 +245,9 @@ public class IntegralOrderCreateCommand extends Command{
 		}catch(Exception e) {
 			vh.put("code","-1");
 			vh.put("message","线下会员积分兑换异常，请联系商家");
+			
+			QueryEngine.getInstance().executeUpdate("update wx_order t set t.isactive='N',t.ordermessage=? where t.id=? and t.ad_client_id=?", new Object[] {"解析线下返回数据异常"+result,orderid,ad_client_id});
+
 			return vh;
 		}
 		int recode=jo.optInt("errCode",-1);
