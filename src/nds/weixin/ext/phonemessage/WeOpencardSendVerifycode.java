@@ -23,7 +23,7 @@ public class WeOpencardSendVerifycode implements ISendSMSMessage{
 			logger.debug("open card send phone message error->params is null");
 	    	holder=new ValueHolder();
 	    	holder.put("code", "-1");
-	    	holder.put("message", "开卡发验证码失败！");
+	    	holder.put("message", "验证码发送失败！");
 	    	return holder;
 		}
 		
@@ -32,7 +32,7 @@ public class WeOpencardSendVerifycode implements ISendSMSMessage{
 			logger.debug("open card send phone message error->vipid isNaN");
 	    	holder=new ValueHolder();
 	    	holder.put("code", "-1");
-	    	holder.put("message", "开卡发验证码失败！");
+	    	holder.put("message", "验证码发送失败！");
 	    	return holder;
 		}
 		
@@ -71,7 +71,7 @@ public class WeOpencardSendVerifycode implements ISendSMSMessage{
 		if(holder==null||!holder.get("code").equals("0")) {
 	    	logger.debug("bind card send phone message error->result is null or error");
 	    	holder.put("code", "-1");
-	    	holder.put("message", "绑卡发验证码失败！");
+	    	holder.put("message", "验证码发送失败！");
 	    	return holder;
 	    }
 		

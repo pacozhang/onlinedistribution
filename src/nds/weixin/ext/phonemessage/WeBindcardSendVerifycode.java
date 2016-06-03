@@ -25,7 +25,7 @@ public class WeBindcardSendVerifycode implements ISendSMSMessage{
 		if(jo==null) {
 			logger.debug("bind card send phone message error->params is null");
 	    	holder.put("code", "-1");
-	    	holder.put("message", "绑卡发验证码失败！");
+	    	holder.put("message", "验证码发送失败！");
 	    	return holder;
 		}
 		
@@ -33,7 +33,7 @@ public class WeBindcardSendVerifycode implements ISendSMSMessage{
 		if(vipid<=0) {
 			logger.debug("bind card send phone message error->vipid isNaN");
 	    	holder.put("code", "-1");
-	    	holder.put("message", "绑卡发验证码失败！");
+	    	holder.put("message", "验证码发送失败！");
 	    	return holder;
 		}
 		int userid=893;
@@ -64,7 +64,7 @@ public class WeBindcardSendVerifycode implements ISendSMSMessage{
 		if(holder==null||!holder.get("code").equals("0")) {
 	    	logger.debug("bind card send phone message error->result is null or error");
 	    	holder.put("code", "-1");
-	    	holder.put("message", "绑卡发验证码失败！");
+	    	holder.put("message", "验证码发送失败！");
 	    	return holder;
 	    }
 		
