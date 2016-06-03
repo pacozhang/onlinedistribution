@@ -187,7 +187,7 @@ public class GetJSONArray extends Command{
 					if (column.getDisplaySetting().getObjectType() == DisplaySetting.OBJ_CLOB) {
 						currentjo.put(column.getName().toLowerCase(),result.getObject(i + 2));
 					} else {
-						currentjo.put(column.getName().toLowerCase(),result.getString(i + 2, true, false));
+						currentjo.put(column.getName().toLowerCase(),result.getString(i + 2, false, false));
 					}
 				}
 	        }catch(Exception e){

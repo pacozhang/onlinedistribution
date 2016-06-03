@@ -128,7 +128,7 @@ public class GetJSONObject extends Command{
 					if(column.getDisplaySetting().getObjectType()==DisplaySetting.OBJ_CLOB){
 						resultdata.put(column.getName().toLowerCase(), result.getObject(i+2));
 					}else{
-						resultdata.put(column.getName().toLowerCase(), result.getString(i+2,true,false));
+						resultdata.put(column.getName().toLowerCase(), result.getString(i+2,false,false));
 					}
 				} catch (Exception e) {
 				}
