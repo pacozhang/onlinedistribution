@@ -83,7 +83,7 @@ public class ClickDispose implements IMessageDispose {
 			event.put("jsonObject",paramsjo);
 			event.setParameter("command", Content);
 
-			//YY
+			//YYfff
 			try {
 				vh=controller.handleEvent(event);
 			}catch(Exception e) {
