@@ -84,6 +84,7 @@ public class ClickDispose implements IMessageDispose {
 			event.setParameter("command", Content);
 
 			//YYfffsssss
+			//ddd
 			try {
 				vh=controller.handleEvent(event);
 			}catch(Exception e) {
