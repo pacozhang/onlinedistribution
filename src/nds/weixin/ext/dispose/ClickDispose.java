@@ -30,9 +30,7 @@ public class ClickDispose implements IMessageDispose {
 	@Override
 	public void dispose(HttpServletRequest request,HttpServletResponse response, WxPublicControl wpc, JSONObject jo) {
 		String message=jo.optString("EventKey","");
-		logger.debug("Content->"+message);
-		
-		
+		logger.debug("Content->"+message);		
 		ValueHolder vh=null;
 		String resultStr=null;
 		ArrayList para=new ArrayList();
