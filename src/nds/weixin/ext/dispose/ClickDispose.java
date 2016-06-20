@@ -24,6 +24,7 @@ import nds.weixin.ext.tools.SendWXMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+//dddsssssss
 public class ClickDispose implements IMessageDispose {
 	private static Logger logger= LoggerManager.getInstance().getLogger(ClickDispose.class.getName());
 	@Override
