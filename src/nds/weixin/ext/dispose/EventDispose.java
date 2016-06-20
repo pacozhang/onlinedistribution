@@ -52,6 +52,6 @@ public class EventDispose implements IMessageDispose{
 		}
 
 		dispose.dispose(request, response,wpc, jo);
-	}
+	}//oooooo
 
 }
