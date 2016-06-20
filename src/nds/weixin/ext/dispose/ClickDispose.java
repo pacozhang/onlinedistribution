@@ -32,6 +32,7 @@ public class ClickDispose implements IMessageDispose {
 		String message=jo.optString("EventKey","");
 		logger.debug("Content->"+message);
 		
+		
 		ValueHolder vh=null;
 		String resultStr=null;
 		ArrayList para=new ArrayList();
