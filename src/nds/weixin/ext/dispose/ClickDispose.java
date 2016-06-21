@@ -154,6 +154,6 @@ public class ClickDispose implements IMessageDispose {
 		
 		logger.debug("result->"+resultStr);
 		SendWXMessage.sendWXMessage(request,response,resultStr);
-	}//lllll
+	}
 
 }
